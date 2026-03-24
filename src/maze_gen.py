@@ -3,10 +3,14 @@ import random
 
 
 class Cell:
-    def __init__(self, x: int, y: int):
+    """
+    Represents each cell of the grid, with position in the grid, walls
+    and if it has been checked or not.
+    """
+    def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
-        self.directions = {
+        self.walls = {
             "N": True,
             "E": True,
             "S": True,
@@ -16,6 +20,10 @@ class Cell:
 
 
 class MazeGenerator:
+    """
+    Main class, will take care of generating, solving, and displaying maze
+    (probably).
+    """
     def __init__(
             self,
             width: int,
