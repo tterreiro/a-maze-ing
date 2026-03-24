@@ -42,6 +42,7 @@ def parse_map(filename):
     # nenhum valor pode ser negativo ou fora do mapa
     if entry[0] < 0 or entry[1] < 0 or exit[0] < 0 or exit[1] < 0:
         raise ValueError("Coordenadas não podem ser negativas")
-    if entry[0] >= width or entry[1] >= height or exit[0] >= width or exit[1] >= height:
+    if (entry[0] >= width or entry[1] >= height 
+            or exit[0] >= width or exit[1] >= height):
         raise ValueError("Coordenadas ENTRY ou EXIT fora do mapa")
     return config
