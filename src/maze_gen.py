@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Tuple
 import random
 
 
@@ -14,9 +14,9 @@ class Cell:
             "N": True,
             "E": True,
             "S": True,
-            "W": True,
+            "W": True
         }
-        self.checked = True
+        self.checked = False
 
 
 class MazeGenerator:
@@ -31,8 +31,7 @@ class MazeGenerator:
             entry: Tuple[int, int],
             exit: Tuple[int, int],
             perfect: bool,
-            output: str,
-            seed: Optional[int]
+            output: str
             ) -> None:
         self.width = width
         self.height = height
@@ -41,4 +40,11 @@ class MazeGenerator:
         self.perfect = perfect
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
-        self.seed = seed
+        self.seed = random.randint(1, 1000000)
+
+    def generate():
+        """John pork"""
+        pass
+
+    def solve():
+        pass
