@@ -4,7 +4,7 @@ from src import parse_map, MazeGenerator
 
 
 def amazeing() -> None:
-    """Main function"""
+    """Main function """
     if len(sys.argv) != 2:
         print("Usage: 'a_maze_ing.py config.txt'")
         exit(1)
