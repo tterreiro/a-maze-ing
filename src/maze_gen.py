@@ -47,7 +47,7 @@ class MazeGenerator:
         self.seed = random.randint(1, 1000000)
 
     def generate():
-        """John pork"""
+        """John pork rge"""
         pass
 
     def solve():
