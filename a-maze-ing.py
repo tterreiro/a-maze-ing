@@ -11,7 +11,7 @@ def amazeing() -> None:
 
     try:
         config = parse_map(sys.argv[1])
-    except PlaceholderError as e:
+    except Exception as e:
         print("Error:", e)
         exit(1)
 

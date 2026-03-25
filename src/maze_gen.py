@@ -34,3 +34,4 @@ class MazeGenerator:
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
         self.seed = seed
+    
