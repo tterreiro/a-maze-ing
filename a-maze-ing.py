@@ -22,10 +22,10 @@ def amazeing() -> None:
             config['ENTRY'],
             config['EXIT'],
             config['PERFECT'],
-            config['OUTPUT'],
+            config['OUTPUT_FILE'],
             config['SEED']
         )
-    except PlaceHolderError as e:
+    except Exception as e:
         print("Error:", e)
         exit(1)
 
