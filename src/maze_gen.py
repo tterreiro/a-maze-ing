@@ -42,3 +42,13 @@ class MazeGenerator:
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
         self.seed = seed
     
+=======
+        self.seed = random.randint(1, 1000000)
+
+    def generate():
+        """John pork"""
+        pass
+
+    def solve():
+        pass
+>>>>>>> ca92ea8c2e07f0250c6aed900fc3fe8d2789240a
