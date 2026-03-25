@@ -40,7 +40,6 @@ class MazeGenerator:
         self.perfect = perfect
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
-=======
         self.seed = random.randint(1, 1000000)
 
     def generate():
