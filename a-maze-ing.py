@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
-from src import parse_map, MazeGenerator
+from src.parsing import parse_map
+from src.maze_gen import MazeGenerator
 
 
 def amazeing() -> None:
@@ -22,8 +23,7 @@ def amazeing() -> None:
             config['ENTRY'],
             config['EXIT'],
             config['PERFECT'],
-            config['OUTPUT_FILE'],
-            config['SEED']
+            config['OUTPUT_FILE']
         )
     except Exception as e:
         print("Error:", e)
