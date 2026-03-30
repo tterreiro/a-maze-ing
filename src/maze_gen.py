@@ -129,6 +129,44 @@ class MazeGenerator:
 
         return maze
 
+    def render_ascii(self):
+        maze_str = ""
+
+    # Top border
+        maze_str += "+"
+        for _ in range(self.width):
+            maze_str += "---+"
+        maze_str += "\n"
+
+        for y in range(self.height):
+            # Row: vertical walls (left/right)
+            row_top = "|"
+            # Row: bottom walls
+            row_bottom = "+"
+
+            for x in range(self.width):
+                cell = self.grid[y][x]
+
+                # Inside of cell
+                row_top += "   "
+
+                # Right wall
+                if cell.walls["E"]:
+                    row_top += "|"
+                else:
+                    row_top += " "
+
+                # Bottom wall
+                if cell.walls["S"]:
+                    row_bottom += "---+"
+                else:
+                    row_bottom += "   +"
+
+            maze_str += row_top + "\n"
+            maze_str += row_bottom + "\n"   
+
+        return maze_str
+
 
 config = parse_map('config.txt')
 
@@ -141,11 +179,11 @@ maze_gen = MazeGenerator(
     config['OUTPUT_FILE']
 )
 
-maze = maze_gen.generate_from_config()
+maze_gen.generate_from_config()
+maze = maze_gen.render_ascii()
 
-for row in maze:
-    print(''.join(row))
 
+print(maze)
 
 def generate():
     """John pork"""
