@@ -60,9 +60,10 @@ class MazeGenerator:
 
                 if 0 <= nx < self.width and 0 <= ny < self.height:
                     neighbor = self.grid[ny][nx]
+                    if self.get_cell_type(nx, ny) == "wall":
+                        continue
                     if not neighbor.checked:
                         neighbors.append((neighbor, wall, opposite))
-
             return neighbors
 
         def carve(cell):
@@ -73,14 +74,30 @@ class MazeGenerator:
 
             for neighbor, wall, opposite in neighbors:
                 if not neighbor.checked:
-                    # remover paredes entre células
                     cell.walls[wall] = False
                     neighbor.walls[opposite] = False
-
                     carve(neighbor)
 
         start_x, start_y = self.entry
         carve(self.grid[start_y][start_x])
+
+    def get_cell_type(self, x, y):
+        pattern = self.get_42_pattern()
+
+        start_x = self.width // 2 - len(pattern[0]) // 2
+        start_y = self.height // 2 - len(pattern) // 2
+
+        for dy, row in enumerate(pattern):
+            for dx, char in enumerate(row):
+                px = start_x + dx
+                py = start_y + dy
+
+                if x == px and y == py:
+                    if char == " ":
+                        return "path"   # aberto
+                    else:
+                        return "wall"   # bloqueado
+        return None
 
     def to_matrix(self):
         w = self.width * 2 + 1
@@ -95,6 +112,13 @@ class MazeGenerator:
                 mx = x * 2 + 1
                 my = y * 2 + 1
 
+                cell_type = self.get_cell_type(x, y)
+
+                # 🔴 desenhar o 42
+                if cell_type == "wall":
+                    maze[my][mx] = '#'
+                    continue
+
                 maze[my][mx] = ' '
 
                 if not cell.walls["N"]:
@@ -105,6 +129,7 @@ class MazeGenerator:
                     maze[my][mx + 1] = ' '
                 if not cell.walls["W"]:
                     maze[my][mx - 1] = ' '
+
         return maze
 
     def place_entry_exit(self, maze):
@@ -131,7 +156,6 @@ class MazeGenerator:
 
     def render_ascii(self):
         maze_str = ""
-
     # Top border
         maze_str += "+"
         for _ in range(self.width):
@@ -163,9 +187,17 @@ class MazeGenerator:
                     row_bottom += "   +"
 
             maze_str += row_top + "\n"
-            maze_str += row_bottom + "\n"   
-
+            maze_str += row_bottom + "\n"
         return maze_str
+
+    def get_42_pattern(self):
+        return [
+            " 4   222 ",
+            "44     2 ",
+            " 4   222 ",
+            " 4   2   ",
+            "444  222 "
+        ]
 
 
 config = parse_map('config.txt')
@@ -184,10 +216,6 @@ maze = maze_gen.render_ascii()
 
 
 print(maze)
-
-def generate():
-    """John pork"""
-    pass
 
 
 def solve():
