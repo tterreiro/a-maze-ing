@@ -10,9 +10,9 @@ def amazeing() -> None:
         print("Usage: python3 a_maze_ing.py config.txt")
         return
 
-    try:
-        config = parse_map(sys.argv[1])
+    config = parse_map(sys.argv[1])
 
+    try:
         maze = MazeGenerator(
             config['WIDTH'],
             config['HEIGHT'],
@@ -22,9 +22,9 @@ def amazeing() -> None:
             config['OUTPUT_FILE']
         )
 
-        maze_gen = maze.generate_maze()
+        maze.generate_maze()
 
-        viz = MazeVisualizer(maze_gen)
+        viz = MazeVisualizer(maze)
         viz.draw_maze()
 
     except Exception as e:

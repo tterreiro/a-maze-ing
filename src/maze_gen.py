@@ -1,6 +1,5 @@
 from typing import Tuple
 import random
-from .parsing import parse_map
 
 
 class Cell:
