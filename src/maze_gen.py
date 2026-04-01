@@ -18,6 +18,7 @@ class Cell:
             "W": True
         }
         self.checked = False
+        self.is_42 = False
 
 
 class MazeGenerator:
@@ -129,7 +130,6 @@ class MazeGenerator:
                     maze[my][mx + 1] = ' '
                 if not cell.walls["W"]:
                     maze[my][mx - 1] = ' '
-
         return maze
 
     def place_entry_exit(self, maze):
@@ -199,24 +199,9 @@ class MazeGenerator:
             "444  222 "
         ]
 
-
-config = parse_map('config.txt')
-
-maze_gen = MazeGenerator(
-    config['WIDTH'],
-    config['HEIGHT'],
-    config['ENTRY'],
-    config['EXIT'],
-    config['PERFECT'],
-    config['OUTPUT_FILE']
-)
-
-maze_gen.generate_from_config()
-maze = maze_gen.render_ascii()
-
-
-print(maze)
-
-
-def solve():
-    pass
+    def get_cell(self, coords: tuple[int, int]) -> Cell:
+        """
+        return a cell using (x, y) coordinates.
+        """
+        x, y = coords
+        return self.grid[y][x]
