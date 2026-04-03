@@ -1,15 +1,19 @@
-def read_map(filename) -> list[str]:
+from typing import Any
+
+
+def read_map(filename: str) -> list[str]:
     with open(filename, "r") as r:
         return [line.strip() for line in r]
 
 
-def parse_map(filename) -> dict:
+def parse_map(filename: str) -> dict:
     config = {}
     with open(filename, "r") as f:
         for line in f:
             line = line.strip()
             if not line or '=' not in line:
                 continue
+            value: Any
             key, value = line.split('=', 1)
             key = key.strip().upper()
             value = value.strip()

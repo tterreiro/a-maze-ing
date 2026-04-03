@@ -81,7 +81,7 @@ class Buttons:
             self.viz.regen()
         elif (self.buttons['path'][0] < x < self.buttons['path'][2]
                 and self.buttons['path'][1] < y < self.buttons['path'][3]):
-            self.viz.show_path()
+            self.viz.find_path()
         elif (self.buttons['quit'][0] < x < self.buttons['quit'][2]
                 and self.buttons['quit'][1] < y < self.buttons['quit'][3]):
             self.viz.close()
@@ -106,12 +106,14 @@ class MazeVisualizer:
         self.cell_size = (
             (self.screen_res - self.wall_thickness) //
             max(maze.width, maze.height))
-        maze_w = self.cell_size * maze.width + self.wall_thickness + 10
-        maze_h = self.cell_size * maze.height + self.wall_thickness + 10
+        self.maze_w = self.cell_size * maze.width + self.wall_thickness
+        self.maze_h = self.cell_size * maze.height + self.wall_thickness
         if self.is_wide:
-            self.window_size = (maze_w, maze_h + self.button_area_height)
+            self.window_size = (self.maze_w + 10,
+                                self.maze_h + 10 + self.button_area_height)
         else:
-            self.window_size = (maze_w + self.button_area_width, maze_h)
+            self.window_size = (self.maze_w + 10 + self.button_area_width,
+                                self.maze_h + 10)
 
         self.x_offset = 5
         self.y_offset = 5
@@ -142,6 +144,14 @@ class MazeVisualizer:
         Self-explanatory
         """
         self.mlx.mlx_pixel_put(self.mlx_ptr, self.win_ptr, x, y, colour)
+
+    def show_seed(self) -> None:
+        print("Seed:", self.maze.seed)
+
+    def close(self, _: Any = None) -> None:
+        """Close the window and exit the MLX loop."""
+        self.mlx.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
+        self.mlx.mlx_loop_exit(self.mlx_ptr)
 
     def draw_cell_walls(self, x: int, y: int, cell: Cell) -> None:
         """
@@ -218,33 +228,30 @@ class MazeVisualizer:
                 cell = self.maze.get_cell((x, y))
                 self.draw_cell_walls(x, y, cell)
 
-    def close(self, _: Any = None) -> None:
-        """Close the window and exit the MLX loop."""
-        self.mlx.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
-        self.mlx.mlx_loop_exit(self.mlx_ptr)
-
     def handle_keypress(self, keycode: int, _=None) -> None:
         """Exit if the ESC key is pressed."""
         if keycode == 65307:  # 65307 is the esc key code
             self.close()
+        if keycode == 114:
+            self.regen()
+        if keycode == 102:
+            self.find_path()
 
-    def show_seed(self, seed: int) -> None:
-        self.mlx.mlx_string_put(
-            self.mlx_ptr,
-            self.win_ptr,
-            50,
-            640,
-            self.text_colour,
-            f"{seed}"
-            )
-
-    def show_path(self) -> None:
+    def find_path(self) -> None:
         pass
 
     def regen(self) -> None:
-        pass
+        self.maze.grid = [[Cell(x, y) for x in range(self.maze.width)]
+                          for y in range(self.maze.height)]
+        self.maze.generate_maze()
+        for y in range(self.maze_h):
+            for x in range(self.maze_w):
+                self.put_pixel(x, y, self.bg_colour)
+        self.draw_maze()
+        self.show_seed()
 
     def draw_window(self) -> None:
         self.draw_maze()
         self.btn.draw_button()
+        self.show_seed()
         self.mlx.mlx_loop(self.mlx_ptr)

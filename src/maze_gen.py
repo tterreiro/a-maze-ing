@@ -41,10 +41,12 @@ class MazeGenerator:
         self.perfect = perfect
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
+        self.seed = None
+
+    def generate_maze(self):
         self.seed = random.randint(1, 999999999)
         random.seed(self.seed)
 
-    def generate_maze(self):
         def get_neighbors(cell):
             directions = [
                 (0, -1, "N", "S"),
@@ -61,8 +63,9 @@ class MazeGenerator:
 
                 if 0 <= nx < self.width and 0 <= ny < self.height:
                     neighbor = self.grid[ny][nx]
-                    if self.get_cell_type(nx, ny) == "wall":
-                        continue
+                    if self.height > 10 and self.width > 10:
+                        if self.get_cell_type(nx, ny) == "wall":
+                            continue
                     if not neighbor.checked:
                         neighbors.append((neighbor, wall, opposite))
             return neighbors
