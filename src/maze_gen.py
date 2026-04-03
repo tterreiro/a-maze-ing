@@ -41,7 +41,8 @@ class MazeGenerator:
         self.perfect = perfect
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
-        self.seed = random.randint(1, 1000000)
+        self.seed = random.randint(1, 999999999)
+        random.seed(self.seed)
 
     def generate_maze(self):
         def get_neighbors(cell):
@@ -96,6 +97,7 @@ class MazeGenerator:
                     if char == " ":
                         return "path"   # aberto
                     else:
+                        self.get_cell((x, y)).is_42 = True
                         return "wall"   # bloqueado
         return None
 
@@ -144,58 +146,13 @@ class MazeGenerator:
         maze[row_e][col_e] = 'S'
         maze[row_t][col_t] = 'E'
 
-    def generate_from_config(self):
-        self.generate_maze()  # gera estrutura (Cells)
-
-        maze = self.to_matrix()  # converte para matriz
-
-        self.place_entry_exit(maze)  # coloca S e E
-
-        return maze
-
-    def render_ascii(self):
-        maze_str = ""
-    # Top border
-        maze_str += "+"
-        for _ in range(self.width):
-            maze_str += "---+"
-        maze_str += "\n"
-
-        for y in range(self.height):
-            # Row: vertical walls (left/right)
-            row_top = "|"
-            # Row: bottom walls
-            row_bottom = "+"
-
-            for x in range(self.width):
-                cell = self.grid[y][x]
-
-                # Inside of cell
-                row_top += "   "
-
-                # Right wall
-                if cell.walls["E"]:
-                    row_top += "|"
-                else:
-                    row_top += " "
-
-                # Bottom wall
-                if cell.walls["S"]:
-                    row_bottom += "---+"
-                else:
-                    row_bottom += "   +"
-
-            maze_str += row_top + "\n"
-            maze_str += row_bottom + "\n"
-        return maze_str
-
     def get_42_pattern(self):
         return [
-            " 4   222 ",
-            "44     2 ",
-            " 4   222 ",
-            " 4   2   ",
-            "444  222 "
+            "4   222",
+            "4 4   2",
+            "444 222",
+            "  4 2   ",
+            "  4 222"
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:

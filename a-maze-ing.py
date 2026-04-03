@@ -3,6 +3,7 @@ import sys
 from src.parsing import parse_map
 from src.maze_gen import MazeGenerator
 from src.display import MazeVisualizer
+sys.setrecursionlimit(10000)
 
 
 def amazeing() -> None:
@@ -10,9 +11,8 @@ def amazeing() -> None:
         print("Usage: python3 a_maze_ing.py config.txt")
         return
 
-    config = parse_map(sys.argv[1])
-
     try:
+        config = parse_map(sys.argv[1])
         maze = MazeGenerator(
             config['WIDTH'],
             config['HEIGHT'],
@@ -25,7 +25,7 @@ def amazeing() -> None:
         maze.generate_maze()
 
         viz = MazeVisualizer(maze)
-        viz.draw_maze()
+        viz.draw_window()
 
     except Exception as e:
         print("Error:", e)
