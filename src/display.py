@@ -9,48 +9,69 @@ class Buttons:
         self.viz = viz
         if viz.is_wide:
             btn_h = viz.button_area_height // 3
-            btn_w = viz.window_size[0] // 5
+            btn_w = viz.window_size[0] // 6
             btn_y = viz.window_size[1] - viz.button_area_height // 2 - btn_h//2
-            spacing = (viz.window_size[0] - 3 * btn_w) // 4
+            spacing = (viz.window_size[0] - 4 * btn_w) // 5
+            # each button is (x1, y1, x2, y2)
             self.buttons = {
-                'regen': (spacing,
-                          btn_y,
-                          spacing + btn_w,
-                          btn_y + btn_h),
-                'path':  (spacing * 2 + btn_w,
-                          btn_y,
-                          spacing * 2 + btn_w * 2,
-                          btn_y + btn_h),
-                'quit':  (spacing * 3 + btn_w * 2,
-                          btn_y,
-                          spacing * 3 + btn_w * 3,
-                          btn_y + btn_h),
+                'regen':   (spacing,
+                            btn_y,
+                            spacing + btn_w,
+                            btn_y + btn_h),
+                'path':    (spacing * 2 + btn_w,
+                            btn_y,
+                            spacing * 2 + btn_w * 2,
+                            btn_y + btn_h),
+                'colour':  (spacing * 3 + btn_w * 2,
+                            btn_y,
+                            spacing * 3 + btn_w * 3,
+                            btn_y + btn_h),
+                'quit':    (spacing * 4 + btn_w * 3,
+                            btn_y,
+                            spacing * 4 + btn_w * 4,
+                            btn_y + btn_h),
             }
         else:
-            btn_w = viz.button_area_width // 3
-            btn_h = viz.window_size[1] // 5
+            btn_h = viz.button_area_width // 5
+            btn_w = viz.window_size[1] // 6
             btn_x = viz.window_size[0] - viz.button_area_width // 2 - btn_w//2
-            spacing = (viz.window_size[1] - 3 * btn_h) // 4
+            gap = 15
+            total_h = 4 * btn_h + 3 * gap
+            start_y = (viz.window_size[1] - total_h) // 2
+            # each button is (x1, y1, x2, y2)
             self.buttons = {
-                'regen': (btn_x,
-                          spacing,
-                          btn_x + btn_w,
-                          spacing + btn_h),
-                'path':  (btn_x,
-                          spacing * 2 + btn_h,
-                          btn_x + btn_w,
-                          spacing * 2 + btn_h * 2),
-                'quit':  (btn_x,
-                          spacing * 3 + btn_h * 2,
-                          btn_x + btn_w,
-                          spacing * 3 + btn_h * 3),
+                'regen':   (btn_x,
+                            start_y,
+                            btn_x + btn_w,
+                            start_y + btn_h),
+                'path':    (btn_x,
+                            start_y + btn_h + gap,
+                            btn_x + btn_w,
+                            start_y + btn_h * 2 + gap),
+                'colour':  (btn_x,
+                            start_y + btn_h * 2 + gap * 2,
+                            btn_x + btn_w,
+                            start_y + btn_h * 3 + gap * 2),
+                'quit':    (btn_x,
+                            start_y + btn_h * 3 + gap * 3,
+                            btn_x + btn_w,
+                            start_y + btn_h * 4 + gap * 3),
             }
         self.colours = {
-            'regen': 0xFF2E7D32,  # dark green
-            'path':  0xFF1565C0,  # dark blue
-            'quit':  0xFFB71C1C,  # dark red
+            'regen':    0xFF2E7D32,  # dark green
+            'path':     0xFF1565C0,  # dark blue
+            'colour':   0xFF6A1B9A,  # dark purple
+            'quit':     0xFFB71C1C,  # dark red
         }
         self.text_colour = 0xFFFFFFFF
+        self.colour_index = 0
+        self.themes = [
+            {'wall': 0xFFFFFFFF, 'bg': 0xFF000000},  # white on black
+            {'wall': 0xFFFFD600, 'bg': 0xFF1A1400},  # yellow on yellow
+            {'wall': 0xFFFF4081, 'bg': 0xFF1A0010},  # pink on dark pink
+            {'wall': 0xFF0288D1, 'bg': 0xFF00111A},  # blue on blue
+            {'wall': 0xFFAB47BC, 'bg': 0xFF120018},  # purple on purple
+        ]
 
     def draw_button(self) -> None:
         for name, rect in self.buttons.items():
@@ -59,15 +80,16 @@ class Buttons:
                 for x in range(x1, x2):
                     self.viz.put_pixel(x, y, self.colours[name])
         labels = {
-            'regen': 'Regenerate',
-            'path':  'Find path',
-            'quit':  'Quit',
+            'regen':   'REGENERATE',
+            'path':    'FIND PATH',
+            'colour': 'CHANGE COLOR',
+            'quit':    'EXIT',
         }
         for name, rect in self.buttons.items():
             x1, y1, x2, y2 = rect
             text = labels[name]
             text_width = len(text) * 10
-            text_height = 17
+            text_height = 19
             cx = (x1 + x2) // 2 - text_width // 2
             cy = (y1 + y2) // 2 - text_height // 2
             self.viz.put_string(cx, cy, self.text_colour, text)
@@ -78,13 +100,39 @@ class Buttons:
 
         if (self.buttons['regen'][0] < x < self.buttons['regen'][2]
                 and self.buttons['regen'][1] < y < self.buttons['regen'][3]):
-            self.viz.regen()
+            self.regen()
         elif (self.buttons['path'][0] < x < self.buttons['path'][2]
                 and self.buttons['path'][1] < y < self.buttons['path'][3]):
-            self.viz.find_path()
+            self.find_path()
         elif (self.buttons['quit'][0] < x < self.buttons['quit'][2]
                 and self.buttons['quit'][1] < y < self.buttons['quit'][3]):
             self.viz.close()
+        elif (self.buttons['colour'][0] < x < self.buttons['colour'][2]
+                and self.buttons['colour'][1] < y < self.buttons['colour'][3]):
+            self.change_colour()
+
+    def change_colour(self) -> None:
+        self.colour_index = (self.colour_index + 1) % len(self.themes)
+        theme = self.themes[self.colour_index]
+        self.viz.wall_colour = theme['wall']
+        self.viz.bg_colour = theme['bg']
+        for y in range(self.viz.maze_h):
+            for x in range(self.viz.maze_w):
+                self.viz.put_pixel(x, y, self.viz.bg_colour)
+        self.viz.draw_maze()
+
+    def regen(self) -> None:
+        self.viz.maze.grid = [[Cell(x, y) for x in range(self.viz.maze.width)]
+                              for y in range(self.viz.maze.height)]
+        self.viz.maze.generate_maze()
+        for y in range(self.viz.maze_h):
+            for x in range(self.viz.maze_w):
+                self.viz.put_pixel(x, y, self.viz.bg_colour)
+        self.viz.draw_maze()
+        self.viz.show_seed()
+
+    def find_path(self) -> None:
+        pass
 
 
 class MazeVisualizer:
@@ -97,7 +145,7 @@ class MazeVisualizer:
         self.screen_res = 800
         self.wall_thickness = 6
         self.button_area_height = 130
-        self.button_area_width = 10
+        self.button_area_width = 230
         diff = abs(maze.width - maze.height)
         self.is_wide = maze.width >= maze.height
         self.screen_res = (
@@ -123,7 +171,6 @@ class MazeVisualizer:
                                         self.window_size[1], "A-maze-ing")
         self.bg_colour = 0xFF000000
         self.wall_colour = 0xFFFFFFFF
-        self.colour_42 = 0xFF0000FF
         self.entry_colour = 0xFF4CAF50
         self.exit_colour = 0xFFE53935
         self.btn = Buttons(self)
@@ -162,23 +209,23 @@ class MazeVisualizer:
         pixel_x = x * self.cell_size + self.x_offset
         pixel_y = y * self.cell_size + self.y_offset
         thickness = self.cell_size // self.wall_thickness
-
+        # maze entry
         if (cell.x, cell.y) == self.maze.entry:
-            for i in range(self.cell_size + 3):
-                for j in range(self.cell_size + 3):
+            for i in range(self.cell_size):
+                for j in range(self.cell_size):
                     self.put_pixel(
                         pixel_x + i,
                         pixel_y + j,
                         self.entry_colour)
-
+        # maze exit
         if (cell.x, cell.y) == self.maze.exit:
-            for i in range(self.cell_size + 2):
-                for j in range(self.cell_size + 2):
+            for i in range(self.cell_size):
+                for j in range(self.cell_size):
                     self.put_pixel(
                         pixel_x + i,
                         pixel_y + j,
                         self.exit_colour)
-
+        # 42 icon
         if cell.is_42:
             for i in range(self.cell_size):
                 for j in range(self.cell_size):
@@ -232,23 +279,12 @@ class MazeVisualizer:
         """Exit if the ESC key is pressed."""
         if keycode == 65307:  # 65307 is the esc key code
             self.close()
-        if keycode == 114:
-            self.regen()
-        if keycode == 102:
-            self.find_path()
-
-    def find_path(self) -> None:
-        pass
-
-    def regen(self) -> None:
-        self.maze.grid = [[Cell(x, y) for x in range(self.maze.width)]
-                          for y in range(self.maze.height)]
-        self.maze.generate_maze()
-        for y in range(self.maze_h):
-            for x in range(self.maze_w):
-                self.put_pixel(x, y, self.bg_colour)
-        self.draw_maze()
-        self.show_seed()
+        if keycode == 114:  # 114 keycode for 'r'
+            self.btn.regen()
+        if keycode == 102:  # 102 keycode for 'f'
+            self.btn.find_path()
+        if keycode == 99:  # 99 keycode for 'c'
+            self.btn.change_colour()
 
     def draw_window(self) -> None:
         self.draw_maze()
