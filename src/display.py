@@ -12,8 +12,7 @@ class Buttons:
             btn_w = viz.window_size[0] // 6
             btn_y = viz.window_size[1] - viz.button_area_height // 2 - btn_h//2
             spacing = (viz.window_size[0] - 4 * btn_w) // 5
-            # each button is (x1, y1, x2, y2)
-            self.buttons = {
+            self.buttons = {  # button: (x1, y1, x2, y2)
                 'regen':   (spacing,
                             btn_y,
                             spacing + btn_w,
@@ -38,12 +37,11 @@ class Buttons:
             gap = 15
             total_h = 4 * btn_h + 3 * gap
             start_y = (viz.window_size[1] - total_h) // 2
-            # each button is (x1, y1, x2, y2)
-            self.buttons = {
-                'regen':   (btn_x,
-                            start_y,
-                            btn_x + btn_w,
-                            start_y + btn_h),
+            self.buttons = {  # button: (x1, y1, x2, y2)
+                'regen':   (btn_x,  # x1
+                            start_y,  # y1
+                            btn_x + btn_w,  # x2
+                            start_y + btn_h),  # y2
                 'path':    (btn_x,
                             start_y + btn_h + gap,
                             btn_x + btn_w,
@@ -63,31 +61,36 @@ class Buttons:
             'colour':   0xFF6A1B9A,  # dark purple
             'quit':     0xFFB71C1C,  # dark red
         }
+        self.path_colour = 0xFFFF6EC7
         self.text_colour = 0xFFFFFFFF
         self.colour_index = 0
         self.themes = [
+            {'wall': 0xFF0288D1, 'bg': 0xFF00111A},  # blue on blue
             {'wall': 0xFFFFFFFF, 'bg': 0xFF000000},  # white on black
             {'wall': 0xFFFFD600, 'bg': 0xFF1A1400},  # yellow on yellow
             {'wall': 0xFFFF4081, 'bg': 0xFF1A0010},  # pink on dark pink
-            {'wall': 0xFF0288D1, 'bg': 0xFF00111A},  # blue on blue
             {'wall': 0xFFAB47BC, 'bg': 0xFF120018},  # purple on purple
         ]
+        self.labels = {
+            'regen':   'Regenerate',
+            'path':    'Show Path',
+            'colour': 'Change color',
+            'quit':    'Exit',
+        }
+        self.path_showing = False
 
     def draw_button(self) -> None:
+        self.labels['path'] = (
+            'Hide path' if self.path_showing
+            else 'Show path')
         for name, rect in self.buttons.items():
             x1, y1, x2, y2 = rect
             for y in range(y1, y2):
                 for x in range(x1, x2):
                     self.viz.put_pixel(x, y, self.colours[name])
-        labels = {
-            'regen':   'REGENERATE',
-            'path':    'FIND PATH',
-            'colour': 'CHANGE COLOR',
-            'quit':    'EXIT',
-        }
         for name, rect in self.buttons.items():
             x1, y1, x2, y2 = rect
-            text = labels[name]
+            text = self.labels[name]
             text_width = len(text) * 10
             text_height = 19
             cx = (x1 + x2) // 2 - text_width // 2
@@ -103,7 +106,9 @@ class Buttons:
             self.regen()
         elif (self.buttons['path'][0] < x < self.buttons['path'][2]
                 and self.buttons['path'][1] < y < self.buttons['path'][3]):
-            self.find_path()
+            self.path_showing = not self.path_showing
+            self.show_path(self.path_showing)
+            self.draw_button()
         elif (self.buttons['quit'][0] < x < self.buttons['quit'][2]
                 and self.buttons['quit'][1] < y < self.buttons['quit'][3]):
             self.viz.close()
@@ -131,8 +136,11 @@ class Buttons:
         self.viz.draw_maze()
         self.viz.show_seed()
 
-    def find_path(self) -> None:
-        pass
+    def show_path(self, is_showing: bool) -> None:
+        for y in range(self.viz.maze_h):
+            for x in range(self.viz.maze_w):
+                self.viz.put_pixel(x, y, self.viz.bg_colour)
+        self.viz.draw_maze()
 
 
 class MazeVisualizer:
@@ -170,7 +178,7 @@ class MazeVisualizer:
                                         self.window_size[0],
                                         self.window_size[1], "A-maze-ing")
         self.bg_colour = 0xFF000000
-        self.wall_colour = 0xFFFFFFFF
+        self.wall_colour = 0xFF0288D1
         self.entry_colour = 0xFF4CAF50
         self.exit_colour = 0xFFE53935
         self.btn = Buttons(self)
@@ -209,6 +217,14 @@ class MazeVisualizer:
         pixel_x = x * self.cell_size + self.x_offset
         pixel_y = y * self.cell_size + self.y_offset
         thickness = self.cell_size // self.wall_thickness
+        # path
+        if cell.is_path and self.btn.path_showing:
+            for i in range(self.cell_size):
+                for j in range(self.cell_size):
+                    self.put_pixel(
+                        pixel_x + i,
+                        pixel_y + j,
+                        self.btn.path_colour)
         # maze entry
         if (cell.x, cell.y) == self.maze.entry:
             for i in range(self.cell_size):
@@ -235,7 +251,7 @@ class MazeVisualizer:
                         self.wall_colour)
 
         if cell.walls["N"]:
-            for i in range(self.cell_size + thickness):
+            for i in range(self.cell_size):
                 for j in range(thickness):
                     self.put_pixel(
                         pixel_x + i,
@@ -244,25 +260,25 @@ class MazeVisualizer:
 
         if cell.walls["W"]:
             for i in range(thickness):
-                for j in range(self.cell_size + thickness):
+                for j in range(self.cell_size):
                     self.put_pixel(
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
 
         if cell.walls["S"]:
-            for i in range(self.cell_size + thickness):
+            for i in range(self.cell_size):
                 for j in range(thickness):
                     self.put_pixel(
                         pixel_x + i,
-                        pixel_y + self.cell_size + j,
+                        pixel_y + self.cell_size - thickness + j,
                         self.wall_colour)
 
         if cell.walls["E"]:
             for i in range(thickness):
-                for j in range(self.cell_size + thickness):
+                for j in range(self.cell_size):
                     self.put_pixel(
-                        pixel_x + self.cell_size + i,
+                        pixel_x + self.cell_size - thickness + i,
                         pixel_y + j,
                         self.wall_colour)
 
@@ -282,7 +298,7 @@ class MazeVisualizer:
         if keycode == 114:  # 114 keycode for 'r'
             self.btn.regen()
         if keycode == 102:  # 102 keycode for 'f'
-            self.btn.find_path()
+            self.btn.show_path()
         if keycode == 99:  # 99 keycode for 'c'
             self.btn.change_colour()
 

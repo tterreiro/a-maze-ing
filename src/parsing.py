@@ -40,13 +40,17 @@ def parse_map(filename: str) -> dict:
     width = config['WIDTH']
     height = config['HEIGHT']
 
+    if width < 2:
+        raise ValueError("Width too low!")
+    if height < 2:
+        raise ValueError("Height too low")
     # ENTRY e EXIT não podem ser iguais
     if entry == exit:
         raise ValueError("Entry value cant be equal to EXIT ")
     # nenhum valor pode ser negativo ou fora do mapa
     if entry[0] < 0 or entry[1] < 0 or exit[0] < 0 or exit[1] < 0:
-        raise ValueError("Coordenadas não podem ser negativas")
+        raise ValueError("Coordenates can't be negative")
     if (entry[0] >= width or entry[1] >= height
             or exit[0] >= width or exit[1] >= height):
-        raise ValueError("Coordenadas ENTRY ou EXIT fora do mapa")
+        raise ValueError("ENTRY or EXIT can't be outside the maze")
     return config

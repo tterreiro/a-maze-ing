@@ -18,6 +18,7 @@ class Cell:
         }
         self.checked = False
         self.is_42 = False
+        self.is_path = False
 
 
 class MazeGenerator:
