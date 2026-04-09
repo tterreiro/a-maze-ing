@@ -214,3 +214,27 @@ class MazeGenerator:
         path.reverse()
 
         return path
+
+    def add_loops(self, probability=0.1):
+        for y in range(self.height):
+            for x in range(self.width):
+                cell = self.grid[y][x]
+
+                directions = [
+                    (0, -1, "N", "S"),
+                    (1, 0, "E", "W"),
+                    (0, 1, "S", "N"),
+                    (-1, 0, "W", "E")
+                ]
+
+                for dx, dy, wall, opposite in directions:
+                    nx = x + dx
+                    ny = y + dy
+
+                    if 0 <= nx < self.width and 0 <= ny < self.height:
+                        neighbor = self.grid[ny][nx]
+
+                        # só abre paredes aleatoriamente
+                        if cell.walls[wall] and random.random() < probability:
+                            cell.walls[wall] = False
+                            neighbor.walls[opposite] = False
