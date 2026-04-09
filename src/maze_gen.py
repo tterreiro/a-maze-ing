@@ -1,5 +1,6 @@
 from typing import Tuple
 import random
+from collections import deque
 
 
 class Cell:
@@ -165,3 +166,51 @@ class MazeGenerator:
         """
         x, y = coords
         return self.grid[y][x]
+
+    def solve(self, maze):
+        h = len(maze)
+        w = len(maze[0])
+
+        # Find start and end
+        for y in range(h):
+            for x in range(w):
+                if maze[y][x] == 'S':
+                    start = (x, y)
+                if maze[y][x] == 'E':
+                    end = (x, y)
+
+        queue = deque([start])
+        visited = set([start])
+        parent = {}
+
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+        while queue:
+            x, y = queue.popleft()
+
+            if (x, y) == end:
+                break
+
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+
+                if 0 <= nx < w and 0 <= ny < h:
+                    if maze[ny][nx] != '#' and (nx, ny) not in visited:
+                        queue.append((nx, ny))
+                        visited.add((nx, ny))
+                        parent[(nx, ny)] = (x, y)
+
+        # Reconstruct path
+        path = []
+        cur = end
+
+        while cur != start:
+            path.append(cur)
+            cur = parent.get(cur)
+            if cur is None:
+                return None  # no solving
+
+        path.append(start)
+        path.reverse()
+
+        return path
