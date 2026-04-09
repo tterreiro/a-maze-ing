@@ -153,11 +153,11 @@ class MazeGenerator:
 
     def get_42_pattern(self):
         return [
-            "4   222",
-            "4 4   2",
-            "444 222",
-            "  4 2   ",
-            "  4 222"
+            " 4   222 ",
+            "44     2 ",
+            " 4   222 ",
+            " 4   2   ",
+            "444  222 "
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:
