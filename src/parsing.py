@@ -47,6 +47,12 @@ def parse_map(filename: str) -> dict:
     # ENTRY e EXIT não podem ser iguais
     if entry == exit:
         raise ValueError("Entry value cant be equal to EXIT ")
+    if (((width//2-3) <= entry[0] <= (width//2+3))
+            and ((height//2-2) <= entry[1] <= (height//2+2))):
+        raise ValueError("Entry cant be in the middle of the maze!")
+    if (((width//2-3) <= exit[0] <= (width//2+3))
+            and ((height//2-2) <= exit[1] <= (height//2+2))):
+        raise ValueError("Exit cant be in the middle of the maze!")
     # nenhum valor pode ser negativo ou fora do mapa
     if entry[0] < 0 or entry[1] < 0 or exit[0] < 0 or exit[1] < 0:
         raise ValueError("Coordenates can't be negative")

@@ -87,6 +87,8 @@ class MazeGenerator:
         start_x, start_y = self.entry
         carve(self.grid[start_y][start_x])
 
+        if not self.perfect:
+            self.add_loops()
         self.solve()
 
     def get_cell_type(self, x, y):
@@ -155,11 +157,11 @@ class MazeGenerator:
 
     def get_42_pattern(self):
         return [
-            "4    222 ",
-            "4 4    2 ",
-            "444  222 ",
-            "  4  2   ",
-            "  4  222 "
+            "4   222",
+            "4 4   2",
+            "444 222",
+            "  4 2  ",
+            "  4 222"
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:
@@ -222,8 +224,12 @@ class MazeGenerator:
         return path
 
     def add_loops(self, probability=0.1):
-        for y in range(self.height):
-            for x in range(self.width):
+        changed = 0
+        for y in random.sample(range(self.height), self.height):
+            for x in random.sample(range(self.width), self.width):
+                if changed > (self.height*self.width)//15:
+                    return
+                changed
                 cell = self.grid[y][x]
 
                 directions = [
@@ -234,13 +240,21 @@ class MazeGenerator:
                 ]
 
                 for dx, dy, wall, opposite in directions:
+                    if changed > (self.height*self.width)//10:
+                        return
                     nx = x + dx
                     ny = y + dy
 
                     if 0 <= nx < self.width and 0 <= ny < self.height:
                         neighbor = self.grid[ny][nx]
+                        if self.height > 10 and self.width > 10:
+                            if self.get_cell_type(x, y) == "wall":
+                                continue
+                            if self.get_cell_type(nx, ny) == "wall":
+                                continue
 
                         # só abre paredes aleatoriamente
                         if cell.walls[wall] and random.random() < probability:
                             cell.walls[wall] = False
                             neighbor.walls[opposite] = False
+                            changed += 1

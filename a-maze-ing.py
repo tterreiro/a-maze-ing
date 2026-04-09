@@ -24,9 +24,6 @@ def amazeing() -> None:
 
         maze.generate_maze()
 
-        if not maze.perfect:
-            maze.add_loops()
-
         viz = MazeVisualizer(maze)
         viz.draw_window()
 

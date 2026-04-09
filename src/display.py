@@ -251,7 +251,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
-
+        # north walls
         if cell.walls["N"]:
             for i in range(self.cell_size):
                 for j in range(thickness):
@@ -259,7 +259,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
-
+        # west walls
         if cell.walls["W"]:
             for i in range(thickness):
                 for j in range(self.cell_size):
@@ -267,7 +267,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
-
+        # south WALLS
         if cell.walls["S"]:
             for i in range(self.cell_size):
                 for j in range(thickness):
@@ -275,7 +275,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + self.cell_size - thickness + j,
                         self.wall_colour)
-
+        # east walls
         if cell.walls["E"]:
             for i in range(thickness):
                 for j in range(self.cell_size):
