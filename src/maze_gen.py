@@ -87,6 +87,8 @@ class MazeGenerator:
         start_x, start_y = self.entry
         carve(self.grid[start_y][start_x])
 
+        self.solve()
+
     def get_cell_type(self, x, y):
         pattern = self.get_42_pattern()
 
@@ -153,11 +155,11 @@ class MazeGenerator:
 
     def get_42_pattern(self):
         return [
-            " 4   222 ",
-            "44     2 ",
-            " 4   222 ",
-            " 4   2   ",
-            "444  222 "
+            "4    222 ",
+            "4 4    2 ",
+            "444  222 ",
+            "  4  2   ",
+            "  4  222 "
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:
@@ -167,7 +169,9 @@ class MazeGenerator:
         x, y = coords
         return self.grid[y][x]
 
-    def solve(self, maze):
+    def solve(self):
+        maze = self.to_matrix()
+        self.place_entry_exit(maze)
         h = len(maze)
         w = len(maze[0])
 
@@ -206,6 +210,8 @@ class MazeGenerator:
 
         while cur != start:
             path.append(cur)
+            mx, my = cur
+            self.get_cell((mx//2, my//2)).is_path = True
             cur = parent.get(cur)
             if cur is None:
                 return None  # no solving
