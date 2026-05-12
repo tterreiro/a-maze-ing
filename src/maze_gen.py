@@ -153,11 +153,11 @@ class MazeGenerator:
 
     def get_42_pattern(self):
         return [
-            " 4   222 ",
-            "44     2 ",
-            " 4   222 ",
-            " 4   2   ",
-            "444  222 "
+            "4     222 ",
+            "4  4    2 ",
+            "444   222 ",
+            "   4  2   ",
+            "   4  222 "
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:
@@ -238,3 +238,42 @@ class MazeGenerator:
                         if cell.walls[wall] and random.random() < probability:
                             cell.walls[wall] = False
                             neighbor.walls[opposite] = False
+
+    def write_output(self):
+        bit = {"N": 1, "E": 2, "S": 4, "W": 8}
+        lines = []
+
+        for y in range(self.height):
+            row = ""
+            for x in range(self.width):
+                cell = self.grid[y][x]
+                value = sum(b for d, b in bit.items() if cell.walls[d])
+                row += format(value, 'X')
+            lines.append(row)
+
+        lines.append("")
+
+        ex, ey = self.entry
+        tx, ty = self.exit
+        lines.append(f"{ey + 1},{ex + 1}")
+        lines.append(f"{ty + 1},{tx + 1}")
+
+        path_matrix = self.to_matrix()
+        self.place_entry_exit(path_matrix)
+        raw_path = self.solve(path_matrix)
+
+        if raw_path:
+            directions = {(0, -2): "N", (2, 0): "E", (0, 2): "S", (-2, 0): "W"}
+            moves = ""
+            for i in range(1, len(raw_path)):
+                px, py = raw_path[i - 1]
+                cx, cy = raw_path[i]
+                moves += directions[(cx - px, cy - py)]
+            lines.append(moves)
+        else:
+            lines.append("")
+
+        content = "\n".join(lines) + "\n"
+
+        with open(self.output, "w") as f:
+            f.write(content)

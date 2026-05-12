@@ -130,6 +130,7 @@ class Buttons:
         self.viz.maze.grid = [[Cell(x, y) for x in range(self.viz.maze.width)]
                               for y in range(self.viz.maze.height)]
         self.viz.maze.generate_maze()
+        self.viz.maze.write_output()
         for y in range(self.viz.maze_h):
             for x in range(self.viz.maze_w):
                 self.viz.put_pixel(x, y, self.viz.bg_colour)
@@ -304,6 +305,7 @@ class MazeVisualizer:
 
     def draw_window(self) -> None:
         self.draw_maze()
+        self.maze.write_output()
         self.btn.draw_button()
         self.show_seed()
         self.mlx.mlx_loop(self.mlx_ptr)
