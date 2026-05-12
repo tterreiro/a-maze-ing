@@ -65,9 +65,8 @@ class MazeGenerator:
 
                 if 0 <= nx < self.width and 0 <= ny < self.height:
                     neighbor = self.grid[ny][nx]
-                    if self.height > 10 and self.width > 10:
-                        if self.get_cell_type(nx, ny) == "wall":
-                            continue
+                    if self.get_cell_type(nx, ny) == "wall":
+                        continue
                     if not neighbor.checked:
                         neighbors.append((neighbor, wall, opposite))
             return neighbors
@@ -87,6 +86,10 @@ class MazeGenerator:
         start_x, start_y = self.entry
         carve(self.grid[start_y][start_x])
 
+        if not self.perfect:
+            self.add_loops()
+        self.solve()
+
     def get_cell_type(self, x, y):
         pattern = self.get_42_pattern()
 
@@ -101,7 +104,7 @@ class MazeGenerator:
                 if x == px and y == py:
                     if char == " ":
                         return "path"   # aberto
-                    else:
+                    elif self.height > 10 and self.width > 10:
                         self.get_cell((x, y)).is_42 = True
                         return "wall"   # bloqueado
         return None
@@ -167,7 +170,9 @@ class MazeGenerator:
         x, y = coords
         return self.grid[y][x]
 
-    def solve(self, maze):
+    def solve(self):
+        maze = self.to_matrix()
+        self.place_entry_exit(maze)
         h = len(maze)
         w = len(maze[0])
 
@@ -206,6 +211,8 @@ class MazeGenerator:
 
         while cur != start:
             path.append(cur)
+            mx, my = cur
+            self.get_cell((mx//2, my//2)).is_path = True
             cur = parent.get(cur)
             if cur is None:
                 return None  # no solving
@@ -216,8 +223,11 @@ class MazeGenerator:
         return path
 
     def add_loops(self, probability=0.1):
-        for y in range(self.height):
-            for x in range(self.width):
+        changed = 0
+        for y in random.sample(range(self.height), self.height):
+            for x in random.sample(range(self.width), self.width):
+                if changed > (self.height*self.width)//15:
+                    return
                 cell = self.grid[y][x]
 
                 directions = [
@@ -228,11 +238,18 @@ class MazeGenerator:
                 ]
 
                 for dx, dy, wall, opposite in directions:
+                    if changed > (self.height*self.width)//10:
+                        return
                     nx = x + dx
                     ny = y + dy
 
                     if 0 <= nx < self.width and 0 <= ny < self.height:
                         neighbor = self.grid[ny][nx]
+                        if self.height > 10 and self.width > 10:
+                            if self.get_cell_type(x, y) == "wall":
+                                continue
+                            if self.get_cell_type(nx, ny) == "wall":
+                                continue
 
                         # só abre paredes aleatoriamente
                         if cell.walls[wall] and random.random() < probability:

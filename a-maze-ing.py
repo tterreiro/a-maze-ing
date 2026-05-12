@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from src.parsing import parse_map
-from src.maze_gen import MazeGenerator
-from src.display import MazeVisualizer
+from src import parse_map, MazeVisualizer, MazeGenerator
 sys.setrecursionlimit(10000)
 
 

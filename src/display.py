@@ -106,9 +106,7 @@ class Buttons:
             self.regen()
         elif (self.buttons['path'][0] < x < self.buttons['path'][2]
                 and self.buttons['path'][1] < y < self.buttons['path'][3]):
-            self.path_showing = not self.path_showing
-            self.show_path(self.path_showing)
-            self.draw_button()
+            self.show_path()
         elif (self.buttons['quit'][0] < x < self.buttons['quit'][2]
                 and self.buttons['quit'][1] < y < self.buttons['quit'][3]):
             self.viz.close()
@@ -127,6 +125,7 @@ class Buttons:
         self.viz.draw_maze()
 
     def regen(self) -> None:
+        self.path_showing = False
         self.viz.maze.grid = [[Cell(x, y) for x in range(self.viz.maze.width)]
                               for y in range(self.viz.maze.height)]
         self.viz.maze.generate_maze()
@@ -135,13 +134,16 @@ class Buttons:
             for x in range(self.viz.maze_w):
                 self.viz.put_pixel(x, y, self.viz.bg_colour)
         self.viz.draw_maze()
+        self.draw_button()
         self.viz.show_seed()
 
-    def show_path(self, is_showing: bool) -> None:
+    def show_path(self) -> None:
+        self.path_showing = not self.path_showing
         for y in range(self.viz.maze_h):
             for x in range(self.viz.maze_w):
                 self.viz.put_pixel(x, y, self.viz.bg_colour)
         self.viz.draw_maze()
+        self.draw_button()
 
 
 class MazeVisualizer:
@@ -250,7 +252,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
-
+        # north walls
         if cell.walls["N"]:
             for i in range(self.cell_size):
                 for j in range(thickness):
@@ -258,7 +260,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
-
+        # west walls
         if cell.walls["W"]:
             for i in range(thickness):
                 for j in range(self.cell_size):
@@ -266,7 +268,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + j,
                         self.wall_colour)
-
+        # south WALLS
         if cell.walls["S"]:
             for i in range(self.cell_size):
                 for j in range(thickness):
@@ -274,7 +276,7 @@ class MazeVisualizer:
                         pixel_x + i,
                         pixel_y + self.cell_size - thickness + j,
                         self.wall_colour)
-
+        # east walls
         if cell.walls["E"]:
             for i in range(thickness):
                 for j in range(self.cell_size):
@@ -298,7 +300,7 @@ class MazeVisualizer:
             self.close()
         if keycode == 114:  # 114 keycode for 'r'
             self.btn.regen()
-        if keycode == 102:  # 102 keycode for 'f'
+        if keycode == 112:  # 112 keycode for 'p'
             self.btn.show_path()
         if keycode == 99:  # 99 keycode for 'c'
             self.btn.change_colour()
