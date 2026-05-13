@@ -1,5 +1,5 @@
 from __future__ import annotations
-from mlx import Mlx
+from lib.mlx import Mlx
 from .maze_gen import MazeGenerator, Cell
 from typing import Any
 

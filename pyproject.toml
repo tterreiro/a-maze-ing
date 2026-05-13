@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mazegen"
+version = "1.0.0"
+description = "A maze generation library"
+authors = [
+  { name="hde-andr", email="hde-andr@student.42porto.com" },
+  { name="crodrigo", email="crodrigo@student.42porto.com" },
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.mypy]
+files = ["src/"]
+follow_imports = "silent"
+exclude = ["venv", "build_venv", "dist"]
