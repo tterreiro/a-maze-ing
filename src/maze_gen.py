@@ -141,7 +141,7 @@ class MazeGenerator:
                     maze[my][mx - 1] = ' '
         return maze
 
-    def place_entry_exit(self, maze):
+    def place_entry_exit(self, maze) -> None:
         ex, ey = self.entry
         tx, ty = self.exit
 
@@ -154,7 +154,7 @@ class MazeGenerator:
         maze[row_e][col_e] = 'S'
         maze[row_t][col_t] = 'E'
 
-    def get_42_pattern(self):
+    def get_42_pattern(self) -> list[str]:
         return [
             "4     222 ",
             "4  4    2 ",

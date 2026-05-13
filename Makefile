@@ -1,57 +1,32 @@
-PYTHON			= python3
-VENV			= venv
-VENV_BIN		= $(VENV)/bin
-V_PYTHON		= $(VENV_BIN)/python
-V_PIP			= $(VENV_BIN)/python -m pip
-MAIN			= a-maze-ing.py
+PYTHON := maze_venv/bin/python3
+PIP := maze_venv/bin/pip3
+MAIN := a_maze_ing.py
+CONFIG := config.txt
 
-MYPY_FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
-DEPENDENCIES	= pytest flake8 mypy lib/mlx-2.2-py3-none-any.whl
-FLAKE			= $(VENV_BIN)/flake8
-MYPY			= $(VENV_BIN)/mypy
-EXCLUDE			= $(VENV)
-OUTPUT_FILE		= mazegen-1.0.0-py3-none-any.whl
-SRCS = ./src/display.py ./src/maze_gen.py ./src/parsing.py ./src/__init__.py
-build: $(OUTPUT_FILE)
+install: maze_venv
 
-$(OUTPUT_FILE): $(SRCS)
-	bash -c "\
-	$(RM) -rf build_venv						&& \
-	$(PYTHON) -m venv build_venv					&& \
-	source ./build_venv/bin/activate				&& \
-	$(PYTHON) -m pip install build				&& \
-	$(PYTHON) -m build					&& \
-	deactivate						&& \
-	$(RM) -rf build_venv"
-	cp ./dist/$(OUTPUT_FILE) .
-
-$(VENV):
-	$(PYTHON) -m venv $(VENV)
-	$(V_PIP) install --upgrade pip
-
-install: build $(VENV)
-	$(V_PIP) install $(DEPENDENCIES)
-	$(V_PIP) install $(OUTPUT_FILE) --force-reinstall
+maze_venv:
+	python3 -m venv maze_venv
+	$(PIP) install -r requirements.txt
 
 run: install
-	$(V_PYTHON) a_maze_ing.py config.txt
+	$(PYTHON) $(MAIN) $(CONFIG)
 
-debug: install
-	$(V_PYTHON) -m pdb $(MAIN)
+debug:
+	$(PYTHON) -m pdb $(MAIN) $(CONFIG)
 
 clean:
-	rm -rf $(VENV) build_venv
-	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name "_pycache_" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
-	rm -rf .mypy_cache .pytest_cache
-	rm -rf $(OUTPUT_FILE) dist/
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
+	find . -type d -name "maze_venv" -exec rm -rf {} +
 
-lint: install
-	$(FLAKE) . --exclude '$(VENV)'
-	$(MYPY) $(MYPY_FLAGS) src
+lint:
+	flake8 . --exclude lib,venv
+	mypy src/ --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
-lint-strict: install
-	$(FLAKE) . --exclude '$(VENV)'
-	$(MYPY) $(MYPY_FLAGS) --strict src
+lint-strict:
+	flake8 . --exclude lib,venv
+	mypy src/ --strict
 
 .PHONY: install run debug clean lint lint-strict
