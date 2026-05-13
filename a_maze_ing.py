@@ -26,6 +26,7 @@ def amazeing() -> None:
             maze.add_loops()
 
         maze.write_output()
+
         viz = MazeVisualizer(maze)
         viz.draw_window()
 
