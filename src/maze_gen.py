@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 import random
 from collections import deque
 
@@ -156,11 +156,11 @@ class MazeGenerator:
 
     def get_42_pattern(self) -> list[str]:
         return [
-            "4     222 ",
-            "4  4    2 ",
-            "444   222 ",
-            "   4  2   ",
-            "   4  222 "
+            "4   222 ",
+            "4 4   2 ",
+            "444 222 ",
+            "  4 2   ",
+            "  4 222 "
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:
@@ -170,9 +170,12 @@ class MazeGenerator:
         x, y = coords
         return self.grid[y][x]
 
-    def solve(self):
-        maze = self.to_matrix()
-        self.place_entry_exit(maze)
+    def solve(self, custom_maze: Optional[list[list[str]]] = None):
+        if custom_maze:
+            maze = custom_maze
+        else:
+            maze = self.to_matrix()
+            self.place_entry_exit(maze)
         h = len(maze)
         w = len(maze[0])
 
