@@ -19,11 +19,7 @@ def amazeing() -> None:
             config['PERFECT'],
             config['OUTPUT_FILE']
         )
-
         maze.generate_maze()
-
-        if not maze.perfect:
-            maze.add_loops()
 
         viz = MazeVisualizer(maze)
         viz.draw_window()

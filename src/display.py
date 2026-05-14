@@ -2,6 +2,7 @@ from __future__ import annotations
 from lib.mlx import Mlx
 from .maze_gen import MazeGenerator, Cell
 from typing import Any
+import os
 
 
 class Buttons:
@@ -208,6 +209,8 @@ class MazeVisualizer:
 
     def close(self, _: Any = None) -> None:
         """Close the window and exit the MLX loop."""
+        if os.path.exists(self.maze.output):
+            os.remove(self.maze.output)
         self.mlx.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
         self.mlx.mlx_loop_exit(self.mlx_ptr)
 

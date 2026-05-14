@@ -283,7 +283,7 @@ class MazeGenerator:
         raw_path = self.solve(path_matrix)
 
         if raw_path:
-            directions = {(0, -2): "N", (2, 0): "E", (0, 2): "S", (-2, 0): "W"}
+            directions = {(0, -1): "N", (1, 0): "E", (0, 1): "S", (-1, 0): "W"}
             moves = ""
             for i in range(1, len(raw_path)):
                 px, py = raw_path[i - 1]
