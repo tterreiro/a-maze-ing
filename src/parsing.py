@@ -6,7 +6,7 @@ def read_map(filename: str) -> list[str]:
         return [line.strip() for line in r]
 
 
-def parse_map(filename: str) -> dict:
+def parse_map(filename: str) -> dict[str, Any]:
     config = {}
     with open(filename, "r") as f:
         for line in f:
