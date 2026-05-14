@@ -43,9 +43,9 @@ class MazeGenerator:
         self.perfect = perfect
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
-        self.seed = None
+        self.seed: Optional[int] = None
 
-    def generate_maze(self):
+    def generate_maze(self) -> None:
         self.seed = random.randint(1, 999999999)
         random.seed(self.seed)
 
@@ -90,7 +90,7 @@ class MazeGenerator:
             self.add_loops()
         self.solve()
 
-    def get_cell_type(self, x, y):
+    def get_cell_type(self, x: int, y: int) -> Optional[str]:
         pattern = self.get_42_pattern()
 
         start_x = self.width // 2 - len(pattern[0]) // 2
@@ -109,7 +109,7 @@ class MazeGenerator:
                         return "wall"   # bloqueado
         return None
 
-    def to_matrix(self):
+    def to_matrix(self) -> list[list[str]]:
         w = self.width * 2 + 1
         h = self.height * 2 + 1
 
@@ -141,7 +141,7 @@ class MazeGenerator:
                     maze[my][mx - 1] = ' '
         return maze
 
-    def place_entry_exit(self, maze) -> None:
+    def place_entry_exit(self, maze: list[list[str]]) -> None:
         ex, ey = self.entry
         tx, ty = self.exit
 
@@ -170,7 +170,7 @@ class MazeGenerator:
         x, y = coords
         return self.grid[y][x]
 
-    def solve(self, custom_maze: Optional[list[list[str]]] = None):
+    def solve(self, custom_maze: Optional[list[list[str]]] = None) -> Optional[list[tuple[int, int]]]:
         if custom_maze:
             maze = custom_maze
         else:
@@ -180,6 +180,8 @@ class MazeGenerator:
         w = len(maze[0])
 
         # Find start and end
+        start: tuple[int, int] = (0, 0)
+        end: tuple[int, int] = (0, 0)
         for y in range(h):
             for x in range(w):
                 if maze[y][x] == 'S':
@@ -210,22 +212,20 @@ class MazeGenerator:
 
         # Reconstruct path
         path = []
-        cur = end
+        cur: Optional[tuple[int, int]] = end
 
-        while cur != start:
+        while cur is not None and cur != start:
             path.append(cur)
             mx, my = cur
             self.get_cell((mx//2, my//2)).is_path = True
             cur = parent.get(cur)
-            if cur is None:
-                return None  # no solving
 
         path.append(start)
         path.reverse()
 
         return path
 
-    def add_loops(self, probability=0.1):
+    def add_loops(self, probability: float = 0.1) -> None:
         changed = 0
         for y in random.sample(range(self.height), self.height):
             for x in random.sample(range(self.width), self.width):
@@ -259,7 +259,7 @@ class MazeGenerator:
                             cell.walls[wall] = False
                             neighbor.walls[opposite] = False
 
-    def write_output(self):
+    def write_output(self) -> None:
         bit = {"N": 1, "E": 2, "S": 4, "W": 8}
         lines = []
 
@@ -283,10 +283,10 @@ class MazeGenerator:
         raw_path = self.solve(path_matrix)
 
         if raw_path:
-            directions = {(0, -1): "N", (1, 0): "E", (0, 1): "S", (-1, 0): "W"}
-            moves = ""
-            for i in range(1, len(raw_path)):
-                px, py = raw_path[i - 1]
+            directions = {(0, -2): "N", (2, 0): "E", (0, 2): "S", (-2, 0): "W"}
+            moves = ""     
+            for i in range(2, len(raw_path), 2):
+                px, py = raw_path[i - 2]
                 cx, cy = raw_path[i]
                 moves += directions[(cx - px, cy - py)]
             lines.append(moves)

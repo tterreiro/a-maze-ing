@@ -297,7 +297,7 @@ class MazeVisualizer:
                 cell = self.maze.get_cell((x, y))
                 self.draw_cell_walls(x, y, cell)
 
-    def handle_keypress(self, keycode: int, _=None) -> None:
+    def handle_keypress(self, keycode: int, _: Any = None) -> None:
         """Exit if the ESC key is pressed."""
         if keycode == 65307:  # 65307 is the esc key code
             self.close()
@@ -310,7 +310,7 @@ class MazeVisualizer:
 
     def draw_window(self) -> None:
         self.draw_maze()
-        self.maze.write_output()
+        ##self.maze.write_output()
         self.btn.draw_button()
         self.show_seed()
         self.mlx.mlx_loop(self.mlx_ptr)
