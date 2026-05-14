@@ -283,13 +283,13 @@ class MazeGenerator:
         raw_path = self.solve(path_matrix)
 
         if raw_path:
-            directions = {(0, -2): "N", (2, 0): "E", (0, 2): "S", (-2, 0): "W"}
-            moves = ""     
+            directions = {(0, -2): "S", (2, 0): "W", (0, 2): "N", (-2, 0): "E"}
+            moves = ""
             for i in range(2, len(raw_path), 2):
                 px, py = raw_path[i - 2]
                 cx, cy = raw_path[i]
                 moves += directions[(cx - px, cy - py)]
-            lines.append(moves)
+            lines.append(moves[::-1])
         else:
             lines.append("")
 

@@ -310,7 +310,7 @@ class MazeVisualizer:
 
     def draw_window(self) -> None:
         self.draw_maze()
-        ##self.maze.write_output()
+        self.maze.write_output()
         self.btn.draw_button()
         self.show_seed()
         self.mlx.mlx_loop(self.mlx_ptr)
