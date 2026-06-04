@@ -105,6 +105,7 @@ Git / GitHub: For version control and collaborative branch synchronization.
 ## Resources
 Documentation — Standard documentation for building wheels, distributing source modules and mlx.
 Peers — Asked peers for help and approval.
+
 Github repositories
 
 AI Usage Disclosure
