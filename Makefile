@@ -12,6 +12,13 @@ maze_venv:
 run: install
 	$(PYTHON) $(MAIN) $(CONFIG)
 
+build-package:
+	python3 -m venv build_venv
+	build_venv/bin/pip install build
+	build_venv/bin/python3 -m build
+	cp dist/mazegen-1.0.0-py3-none-any.whl .
+	rm -rf build_venv dist *.egg-info
+
 debug:
 	$(PYTHON) -m pdb $(MAIN) $(CONFIG)
 
@@ -29,4 +36,4 @@ lint-strict:
 	flake8 . --exclude lib,venv
 	mypy src/ --strict
 
-.PHONY: install run debug clean lint lint-strict
+.PHONY: install run debug clean lint lint-strict build-package
