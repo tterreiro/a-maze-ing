@@ -98,7 +98,7 @@ class Buttons:
             cy = (y1 + y2) // 2 - text_height // 2
             self.viz.put_string(cx, cy, self.text_colour, text)
 
-    def handle_mouse(self, button: int, x: int, y: int, _=None) -> None:
+    def handle_mouse(self, button: int, x: int, y: int, _: Any = None) -> None:
         if button != 1:
             return
 

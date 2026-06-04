@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Any
 import random
 from collections import deque
 
@@ -49,7 +49,7 @@ class MazeGenerator:
         self.seed = random.randint(1, 999999999)
         random.seed(self.seed)
 
-        def get_neighbors(cell):
+        def get_neighbors(cell: Cell) -> list[Any]:
             directions = [
                 (0, -1, "N", "S"),
                 (1, 0, "E", "W"),
@@ -71,7 +71,7 @@ class MazeGenerator:
                         neighbors.append((neighbor, wall, opposite))
             return neighbors
 
-        def carve(cell):
+        def carve(cell: Cell) -> None:
             cell.checked = True
 
             neighbors = get_neighbors(cell)
@@ -170,7 +170,10 @@ class MazeGenerator:
         x, y = coords
         return self.grid[y][x]
 
-    def solve(self, custom_maze: Optional[list[list[str]]] = None) -> Optional[list[tuple[int, int]]]:
+    def solve(
+        self,
+        custom_maze: Optional[list[list[str]]] = None
+            ) -> Optional[list[tuple[int, int]]]:
         if custom_maze:
             maze = custom_maze
         else:
