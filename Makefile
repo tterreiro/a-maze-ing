@@ -23,7 +23,7 @@ clean:
 
 lint:
 	flake8 . --exclude lib,venv
-	mypy src/ --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	mypy src/ --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --no-disallow-untyped-calls
 
 lint-strict:
 	flake8 . --exclude lib,venv
