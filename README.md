@@ -8,34 +8,34 @@ This project is a complete maze generation tool designed to build, parse, custom
 ### Installation
 You can build and install the core generation engine as a standalone, reusable Python module. To compile the module into a single pip-installable wheel asset at the repository root, run:
 
-```bash```
+```bash
 make install
 
-```bash```
+```bash
 make build-package
 
 Alternatively, you can install the required internal runtime dependencies manually using:
 
-```bash```
+```bash
 pip install -r requirements.txt
 
 ## Execution
 To execute the primary generation and visualization pipeline, run the root python script while supplying your configuration layout:
 
-```bash```
+```bash
 make run
 
 To debug you can run:
-```bash```
+```bash
 make debug
 
 ## Static Analysis
 To check type hints and ensure structural compliance across the source directory, invoke the linting tool:
 
-```bash```
+```bash
 make lint
 
-```bash```
+```bash
 make lint-strict
 
 ## Config File Structure
