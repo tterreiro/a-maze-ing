@@ -105,10 +105,10 @@ class MazeGenerator:
 
                 if x == px and y == py:
                     if char == " ":
-                        return "path"   # aberto
+                        return "path"   # open
                     elif self.height > 10 and self.width > 10:
                         self.get_cell((x, y)).is_42 = True
-                        return "wall"   # bloqueado
+                        return "wall"   # blocked
         return None
 
     def to_matrix(self) -> list[list[str]]:
@@ -127,7 +127,7 @@ class MazeGenerator:
 
                 cell_type = self.get_cell_type(x, y)
 
-                # 🔴 desenhar o 42
+                # 🔴 writing the 42
                 if cell_type == "wall":
                     maze[my][mx] = '#'
                     continue
@@ -262,7 +262,7 @@ class MazeGenerator:
                             if self.get_cell_type(nx, ny) == "wall":
                                 continue
 
-                        # só abre paredes aleatoriamente
+                        # only open walls randomly
                         if cell.walls[wall] and random.random() < probability:
                             cell.walls[wall] = False
                             neighbor.walls[opposite] = False
