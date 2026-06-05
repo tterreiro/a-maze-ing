@@ -284,8 +284,8 @@ class MazeGenerator:
 
         ex, ey = self.entry
         tx, ty = self.exit
-        lines.append(f"{ey + 1},{ex + 1}")
-        lines.append(f"{ty + 1},{tx + 1}")
+        lines.append(f"{ex},{ey}")
+        lines.append(f"{tx},{ty}")
 
         path_matrix = self.to_matrix()
         self.place_entry_exit(path_matrix)
