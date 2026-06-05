@@ -7,11 +7,12 @@ import os
 
 class Buttons:
     """
-    Handles the calculation, placement, and rendering of interactive on-screen 
+    Handles the calculation, placement, and rendering of interactive on-screen
     buttons within the maze visualizer window.
     """
     def __init__(self, viz: MazeVisualizer):
-        """Initializes the button layout grid based on the visualizer window dimensions."""
+        """Initializes the button layout grid
+        based on the visualizer window dimensions."""
         self.viz = viz
         if viz.is_wide:
             btn_h = viz.button_area_height // 3
@@ -86,7 +87,8 @@ class Buttons:
         self.path_showing = False
 
     def draw_button(self) -> None:
-        """Renders all buttons and overlays their respective text descriptions onto the window."""
+        """Renders all buttons and overlays their
+        respective text descriptions onto the window."""
         self.labels['path'] = (
             'Hide path' if self.path_showing
             else 'Show path')
@@ -105,7 +107,8 @@ class Buttons:
             self.viz.put_string(cx, cy, self.text_colour, text)
 
     def handle_mouse(self, button: int, x: int, y: int, _: Any = None) -> None:
-        """Maps user mouse click coordinates to button fields and triggers corresponding actions."""
+        """Maps user mouse click coordinates to
+        button fields and triggers corresponding actions."""
         if button != 1:
             return
 
