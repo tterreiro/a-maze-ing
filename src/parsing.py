@@ -26,6 +26,8 @@ def parse_map(filename: str) -> dict[str, Any]:
                 x_str, y_str = value.split(',')
                 value = (int(x_str), int(y_str))
             elif key == 'PERFECT':
+                if value.lower() not in ('true', 'false'):
+                    raise ValueError("PERFECT must be true or false")
                 value = value.lower() == 'true'
             config[key] = value
 
@@ -49,9 +51,10 @@ def parse_map(filename: str) -> dict[str, Any]:
     # ENTRY e EXIT não podem ser iguais
     if entry == exit:
         raise ValueError("Entry value cant be equal to EXIT ")
-    if (((width//2-3) <= entry[0] <= (width//2+3))
-            and ((height//2-2) <= entry[1] <= (height//2+2))):
-        raise ValueError("Entry cant be in the middle of the maze!")
+    if (width > 10 and height > 10):
+        if (((width//2-3) <= entry[0] <= (width//2+3))
+                and ((height//2-2) <= entry[1] <= (height//2+2))):
+            raise ValueError("Entry cant be in the middle of the maze!")
     if (((width//2-3) <= exit[0] <= (width//2+3))
             and ((height//2-2) <= exit[1] <= (height//2+2))):
         raise ValueError("Exit cant be in the middle of the maze!")
