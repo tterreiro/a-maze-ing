@@ -2,11 +2,13 @@ from typing import Any
 
 
 def read_map(filename: str) -> list[str]:
+    """Read configuration file and return list of lines."""
     with open(filename, "r") as r:
         return [line.strip() for line in r]
 
 
 def parse_map(filename: str) -> dict[str, Any]:
+    """Parse configuration file and validate maze settings."""
     config = {}
     with open(filename, "r") as f:
         for line in f:

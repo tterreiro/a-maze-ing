@@ -5,6 +5,7 @@ sys.setrecursionlimit(10000)
 
 
 def amazeing() -> None:
+    """Main entry point for the maze generator and visualizer."""
     if len(sys.argv) != 2:
         print("Usage: python3 a_maze_ing.py config.txt")
         return

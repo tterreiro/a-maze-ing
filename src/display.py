@@ -87,8 +87,7 @@ class Buttons:
         self.path_showing = False
 
     def draw_button(self) -> None:
-        """Renders all buttons and overlays their
-        respective text descriptions onto the window."""
+        """Render all buttons with their text labels on the window."""
         self.labels['path'] = (
             'Hide path' if self.path_showing
             else 'Show path')
@@ -106,9 +105,9 @@ class Buttons:
             cy = (y1 + y2) // 2 - text_height // 2
             self.viz.put_string(cx, cy, self.text_colour, text)
 
-    def handle_mouse(self, button: int, x: int, y: int, _: Any = None) -> None:
-        """Maps user mouse click coordinates to
-        button fields and triggers corresponding actions."""
+    def handle_mouse(self, button: int, x: int, y: int,
+                     _: Any = None) -> None:
+        """Map mouse click coordinates to button actions."""
         if button != 1:
             return
 
@@ -126,7 +125,7 @@ class Buttons:
             self.change_colour()
 
     def change_colour(self) -> None:
-        """Changes the buttons colours"""
+        """Cycle through color themes for maze display."""
         self.colour_index = (self.colour_index + 1) % len(self.themes)
         theme = self.themes[self.colour_index]
         self.viz.wall_colour = theme['wall']
@@ -137,7 +136,7 @@ class Buttons:
         self.viz.draw_maze()
 
     def regen(self) -> None:
-        """Regenerates and redraws the maze and buttons"""
+        """Regenerate maze and redraw display with buttons."""
         self.path_showing = False
         self.viz.maze.grid = [[Cell(x, y) for x in range(self.viz.maze.width)]
                               for y in range(self.viz.maze.height)]
@@ -151,7 +150,7 @@ class Buttons:
         self.viz.show_seed()
 
     def show_path(self) -> None:
-        """Shows the path to the exit but painting the respective cells"""
+        """Toggle display of the solution path through the maze."""
         self.path_showing = not self.path_showing
         for y in range(self.viz.maze_h):
             for x in range(self.viz.maze_w):
@@ -204,36 +203,29 @@ class MazeVisualizer:
         self.mlx.mlx_hook(self.win_ptr, 2, 1 << 0, self.handle_keypress, None)
         self.mlx.mlx_hook(self.win_ptr, 4, 1 << 2, self.btn.handle_mouse, None)
 
-    def put_string(self, x: int, y: int, colour: int,  string: str,) -> None:
-        """
-        Self-explanatory
-        """
+    def put_string(self, x: int, y: int, colour: int,
+                   string: str) -> None:
+        """Render a string at the specified position with color."""
         self.mlx.mlx_string_put(self.mlx_ptr, self.win_ptr, x, y,
                                 colour, string)
 
     def put_pixel(self, x: int, y: int, colour: int) -> None:
-        """
-        Self-explanatory
-        """
+        """Render a pixel at the specified position with color."""
         self.mlx.mlx_pixel_put(self.mlx_ptr, self.win_ptr, x, y, colour)
 
     def show_seed(self) -> None:
-        """Prints seed"""
+        """Display the random seed used for maze generation."""
         print("Seed:", self.maze.seed)
 
     def close(self, _: Any = None) -> None:
-        """Close the window and exit the MLX loop."""
+        """Close the window and exit the MLX event loop."""
         if os.path.exists(self.maze.output):
             os.remove(self.maze.output)
         self.mlx.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
         self.mlx.mlx_loop_exit(self.mlx_ptr)
 
     def draw_cell_walls(self, x: int, y: int, cell: Cell) -> None:
-        """
-        Draws the cell's walls in the window, based on the walls thickness,
-        cell size and coordinates offset (the extra space in the window, used
-        to center the maze)
-        """
+        """Draw cell walls, entry, exit, and path visualization."""
         pixel_x = x * self.cell_size + self.x_offset
         pixel_y = y * self.cell_size + self.y_offset
         thickness = self.cell_size // self.wall_thickness
@@ -303,16 +295,14 @@ class MazeVisualizer:
                         self.wall_colour)
 
     def draw_maze(self) -> None:
-        """
-        This draws the maze!!
-        """
+        """Draw the entire maze by rendering each cell's walls."""
         for y in range(self.maze.height):
             for x in range(self.maze.width):
                 cell = self.maze.get_cell((x, y))
                 self.draw_cell_walls(x, y, cell)
 
     def handle_keypress(self, keycode: int, _: Any = None) -> None:
-        """Exit if the ESC key is pressed."""
+        """Handle keyboard input for maze interaction."""
         if keycode == 65307:  # 65307 is the esc key code
             self.close()
         if keycode == 114:  # 114 keycode for 'r'
@@ -323,7 +313,7 @@ class MazeVisualizer:
             self.btn.change_colour()
 
     def draw_window(self) -> None:
-        """Draws maze, writes output file, draws button and starts mlx loop"""
+        """Initialize window, draw maze, and start the event loop."""
         self.draw_maze()
         self.maze.write_output()
         self.btn.draw_button()

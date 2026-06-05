@@ -46,6 +46,7 @@ class MazeGenerator:
         self.seed: Optional[int] = None
 
     def generate_maze(self) -> None:
+        """Generate a maze using recursive carving algorithm."""
         self.seed = random.randint(1, 999999999)
         random.seed(self.seed)
 
@@ -91,6 +92,7 @@ class MazeGenerator:
         self.solve()
 
     def get_cell_type(self, x: int, y: int) -> Optional[str]:
+        """Determine if a cell is a wall or path based on 42 pattern."""
         pattern = self.get_42_pattern()
 
         start_x = self.width // 2 - len(pattern[0]) // 2
@@ -110,6 +112,7 @@ class MazeGenerator:
         return None
 
     def to_matrix(self) -> list[list[str]]:
+        """Convert maze grid to a 2D matrix representation."""
         w = self.width * 2 + 1
         h = self.height * 2 + 1
 
@@ -142,6 +145,7 @@ class MazeGenerator:
         return maze
 
     def place_entry_exit(self, maze: list[list[str]]) -> None:
+        """Mark entry and exit points in the maze matrix."""
         ex, ey = self.entry
         tx, ty = self.exit
 
@@ -155,6 +159,7 @@ class MazeGenerator:
         maze[row_t][col_t] = 'E'
 
     def get_42_pattern(self) -> list[str]:
+        """Return the 42 logo pattern for maze decoration."""
         return [
             "4   222 ",
             "4 4   2 ",
@@ -164,9 +169,7 @@ class MazeGenerator:
         ]
 
     def get_cell(self, coords: tuple[int, int]) -> Cell:
-        """
-        return a cell using (x, y) coordinates.
-        """
+        """Return a cell using (x, y) coordinates."""
         x, y = coords
         return self.grid[y][x]
 
@@ -174,6 +177,7 @@ class MazeGenerator:
         self,
         custom_maze: Optional[list[list[str]]] = None
             ) -> Optional[list[tuple[int, int]]]:
+        """Solve the maze using BFS algorithm and mark the path."""
         if custom_maze:
             maze = custom_maze
         else:
@@ -229,6 +233,7 @@ class MazeGenerator:
         return path
 
     def add_loops(self, probability: float = 0.1) -> None:
+        """Add random loops to the maze for non-perfect mazes."""
         changed = 0
         for y in random.sample(range(self.height), self.height):
             for x in random.sample(range(self.width), self.width):
@@ -263,6 +268,7 @@ class MazeGenerator:
                             neighbor.walls[opposite] = False
 
     def write_output(self) -> None:
+        """Write maze data and path solution to output file."""
         bit = {"N": 1, "E": 2, "S": 4, "W": 8}
         lines = []
 
