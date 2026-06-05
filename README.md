@@ -8,35 +8,42 @@ This project is a complete maze generation tool designed to build, parse, custom
 ### Installation
 You can build and install the core generation engine as a standalone, reusable Python module. To compile the module into a single pip-installable wheel asset at the repository root, run:
 
-bash
+```bash
 make install
+```
 
-bash
+```bash
 make build-package
+```
 
 Alternatively, you can install the required internal runtime dependencies manually using:
 
-bash
+```bash
 pip install -r requirements.txt
+```
 
 ## Execution
 To execute the primary generation and visualization pipeline, run the root python script while supplying your configuration layout:
 
-bash
+```bash
 make run
+```
 
 To debug you can run:
-bash
+```bash
 make debug
+```
 
 ## Static Analysis
 To check type hints and ensure structural compliance across the source directory, invoke the linting tool:
 
-bash
+```bash
 make lint
+```
 
-bash
+```bash
 make lint-strict
+```
 
 ## Config File Structure
 The application relies on a config.txt file located at the root of the repository to manage dimensions, entry points, and generation criteria. The file must follow this exact format:
@@ -86,10 +93,11 @@ visualizer = MazeVisualizer(matrix)
 visualizer.show()
 
 ## Team and Project Management
-## Roles of Each Team Member
-hde-andr: Focused on the graphical user interface integration using the MiniLibX (mlx) library, configuring the automated compiler system within the Makefile, structure layout management, and generating documentation.
+# Roles of Each Team Member
 
-crodrigo: Focused on config file data parsing, building the core grid architecture, implementing the Recursive Backtracking generation mechanics, and developing the foundational DFS pathfinding algorithm.
+**hde-andr**: Focused on the graphical user interface integration using the MiniLibX (mlx) library, configuring the automated compiler system within the Makefile, structure layout management, and generating documentation.
+
+**crodrigo**: Focused on config file data parsing, building the core grid architecture, implementing the Recursive Backtracking generation mechanics, and developing the foundational DFS pathfinding algorithm.
 
 ## Anticipated Planning and Evolution
 Our original planning structured the development into sequential phases: environment scaffolding, parsing implementation, core algorithm coding, and visual integration. While the layout parsing and graphical shell structures moved quickly, aligning internal matrix coordinate updates with recursive stack boundaries took extra refinement. We adapted by lengthening our algorithm verification windows to guarantee stability on larger matrix profiles.
@@ -97,7 +105,7 @@ Our original planning structured the development into sequential phases: environ
 ## Successes and Improvements
 What worked well: Decoupling the graphical interface pipeline from the algorithmic matrix calculation engine early on allowed both team members to develop and test modules concurrently without version conflicts.
 
-What could be improved: The performance could be improve. The graphical part was made using a method that works very slowly and we couldve implemented animation and extra features.
+What could be improved: The performance could be improved. The graphical part was made using a method that works very slowly and we couldve implemented animation and extra features. Also we couldve been more communicative.
 
 ## Tools Used
 Git / GitHub: For version control and collaborative branch synchronization.
@@ -105,8 +113,7 @@ Git / GitHub: For version control and collaborative branch synchronization.
 ## Resources
 Documentation — Standard documentation for building wheels, distributing source modules and mlx.
 Peers — Asked peers for help and approval.
-
 Github repositories
 
-AI Usage Disclosure
+## AI Usage Disclosure
 AI was used in the understanding of some concepts and error checking.
