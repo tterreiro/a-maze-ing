@@ -6,7 +6,12 @@ import os
 
 
 class Buttons:
+    """
+    Handles the calculation, placement, and rendering of interactive on-screen 
+    buttons within the maze visualizer window.
+    """
     def __init__(self, viz: MazeVisualizer):
+        """Initializes the button layout grid based on the visualizer window dimensions."""
         self.viz = viz
         if viz.is_wide:
             btn_h = viz.button_area_height // 3
@@ -81,6 +86,7 @@ class Buttons:
         self.path_showing = False
 
     def draw_button(self) -> None:
+        """Renders all buttons and overlays their respective text descriptions onto the window."""
         self.labels['path'] = (
             'Hide path' if self.path_showing
             else 'Show path')
@@ -99,6 +105,7 @@ class Buttons:
             self.viz.put_string(cx, cy, self.text_colour, text)
 
     def handle_mouse(self, button: int, x: int, y: int, _: Any = None) -> None:
+        """Maps user mouse click coordinates to button fields and triggers corresponding actions."""
         if button != 1:
             return
 
@@ -116,6 +123,7 @@ class Buttons:
             self.change_colour()
 
     def change_colour(self) -> None:
+        """Changes the buttons colours"""
         self.colour_index = (self.colour_index + 1) % len(self.themes)
         theme = self.themes[self.colour_index]
         self.viz.wall_colour = theme['wall']
@@ -126,6 +134,7 @@ class Buttons:
         self.viz.draw_maze()
 
     def regen(self) -> None:
+        """Regenerates and redraws the maze and buttons"""
         self.path_showing = False
         self.viz.maze.grid = [[Cell(x, y) for x in range(self.viz.maze.width)]
                               for y in range(self.viz.maze.height)]
@@ -139,6 +148,7 @@ class Buttons:
         self.viz.show_seed()
 
     def show_path(self) -> None:
+        """Shows the path to the exit but painting the respective cells"""
         self.path_showing = not self.path_showing
         for y in range(self.viz.maze_h):
             for x in range(self.viz.maze_w):
@@ -205,6 +215,7 @@ class MazeVisualizer:
         self.mlx.mlx_pixel_put(self.mlx_ptr, self.win_ptr, x, y, colour)
 
     def show_seed(self) -> None:
+        """Prints seed"""
         print("Seed:", self.maze.seed)
 
     def close(self, _: Any = None) -> None:
@@ -309,6 +320,7 @@ class MazeVisualizer:
             self.btn.change_colour()
 
     def draw_window(self) -> None:
+        """Draws maze, writes output file, draws button and starts mlx loop"""
         self.draw_maze()
         self.maze.write_output()
         self.btn.draw_button()
