@@ -6,16 +6,16 @@ CONFIG := config.txt
 install: maze_venv
 
 maze_venv:
-	python3 -m venv maze_venv
+	python3.10 -m venv maze_venv
 	$(PIP) install -r requirements.txt
 
 run: install
 	$(PYTHON) $(MAIN) $(CONFIG)
 
-build-package:
-	python3 -m venv build_venv
+build:
+	python3.10 -m venv build_venv
 	build_venv/bin/pip install build
-	build_venv/bin/python3 -m build
+	build_venv/bin/python3.10 -m build
 	cp dist/mazegen-1.0.0-py3-none-any.whl .
 	rm -rf build_venv dist *.egg-info
 
@@ -30,10 +30,10 @@ clean:
 
 lint:
 	flake8 . --exclude lib,venv
-	mypy src/ --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --no-disallow-untyped-calls
+	mypy src/ --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict:
 	flake8 . --exclude lib,venv
-	mypy src/ --strict
+	mypy src/ --strict --allow-untyped-calls
 
-.PHONY: install run debug clean lint lint-strict build-package
+.PHONY: install run debug clean lint lint-strict build

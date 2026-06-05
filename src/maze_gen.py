@@ -232,7 +232,7 @@ class MazeGenerator:
 
         return path
 
-    def add_loops(self, probability: float = 0.1) -> None:
+    def add_loops(self, probability: float = 0.04) -> None:
         """Add random loops to the maze for non-perfect mazes."""
         changed = 0
         for y in random.sample(range(self.height), self.height):
