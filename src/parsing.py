@@ -52,6 +52,8 @@ def parse_map(filename: str) -> dict[str, Any]:
     # ENTRY and EXIT can not be equal
     if entry == exit:
         raise ValueError("Entry value cant be equal to EXIT ")
+    if (width < 10 and height < 10):
+        print("Maze too small for 42 logo!")
     if (width > 10 and height > 10):
         if (((width//2-3) <= entry[0] <= (width//2+3))
                 and ((height//2-2) <= entry[1] <= (height//2+2))):
