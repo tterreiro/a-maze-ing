@@ -8,6 +8,10 @@ install: maze_venv
 maze_venv:
 	python3.10 -m venv maze_venv
 	$(PIP) install -r requirements.txt
+	python3.10 -m wheel unpack ./lib/mlx-2.2-py3-ubuntu-any.whl
+	mv ./mlx-2.2/mlx ./lib
+	rm -fr ./mlx-2.2
+
 
 run: install
 	$(PYTHON) $(MAIN) $(CONFIG)
@@ -26,7 +30,8 @@ clean:
 	find . -type d -name "_pycache_" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
-	find . -type d -name "maze_venv" -exec rm -rf {} +
+	rm -rf maze_venv
+	rm -rf lib/mlx
 
 lint:
 	flake8 . --exclude lib,venv
@@ -34,6 +39,6 @@ lint:
 
 lint-strict:
 	flake8 . --exclude lib,venv
-	mypy src/ --strict --allow-untyped-calls
+	mypy src/ --strict --allow-untyped-calls --ignore-missing-imports
 
 .PHONY: install run debug clean lint lint-strict build

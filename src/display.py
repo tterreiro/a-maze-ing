@@ -307,7 +307,7 @@ class MazeVisualizer:
             self.close()
         if keycode == 114:  # 114 keycode for 'r'
             self.btn.regen()
-        if keycode == 112:  # 112 keycode for 'p'
+        if keycode == 115:  # 115 keycode for 'p'
             self.btn.show_path()
         if keycode == 99:  # 99 keycode for 'c'
             self.btn.change_colour()

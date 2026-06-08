@@ -54,6 +54,7 @@ ENTRY=1,5
 EXIT=0,1
 OUTPUT_FILE=maze.txt
 PERFECT=TRUE
+SEED=982398252382
 WIDTH / HEIGHT: Integer values defining the grid dimensions for the maze.
 
 ENTRY / EXIT: Coordinate pairs (X,Y) specifying the start and completion points of the maze layout.
@@ -61,6 +62,8 @@ ENTRY / EXIT: Coordinate pairs (X,Y) specifying the start and completion points 
 OUTPUT_FILE: The target filename where the generated maze structure is exported.
 
 PERFECT: A boolean flag determining whether the maze has one or more ways to the exit.
+
+SEED: Custom seed to generate a specific maze
 
 ## Maze Generation Algorithm
 ## Chosen Algorithm
@@ -72,14 +75,14 @@ We selected Recursive Backtracking because it was conceptually the most interest
 ## Reusable Module
 The core functionality of this project is decoupled into a completely self-contained, reusable package called mazegen.
 
-## What is Reusable
+# What is Reusable
 parsing.py: Handles map validation, coordinate registration, and config parsing pipelines.
 
 maze_gen.py: The complete matrix handling, pathfinding logic, and layout generation state machine for the Recursive Backtracking algorithm.
 
 display.py: A clean, abstracted visualizer class managing window lifecycles and matrix drawings.
 
-## How to Use It
+# How to Use It
 Once built and installed via pip (pip install mazegen-1.0.0-py3-none-any.whl), you can import the distinct layers into any outside Python project:
 
 Python

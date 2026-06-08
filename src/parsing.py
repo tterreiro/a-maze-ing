@@ -1,20 +1,16 @@
 from typing import Any
 
 
-def read_map(filename: str) -> list[str]:
-    """Read configuration file and return list of lines."""
-    with open(filename, "r") as r:
-        return [line.strip() for line in r]
-
-
 def parse_map(filename: str) -> dict[str, Any]:
     """Parse configuration file and validate maze settings."""
     config = {}
     with open(filename, "r") as f:
         for line in f:
             line = line.strip()
-            if not line or '=' not in line:
+            if line.startswith('#'):
                 continue
+            if not line or '=' not in line:
+                raise ValueError("Every line should be 'KEY=VALUE'")
             value: Any
             key, value = line.split('=', 1)
             key = key.strip().upper()
@@ -29,6 +25,11 @@ def parse_map(filename: str) -> dict[str, Any]:
                 if value.lower() not in ('true', 'false'):
                     raise ValueError("PERFECT must be true or false")
                 value = value.lower() == 'true'
+            elif key == 'SEED':
+                try:
+                    value = int(value)
+                except Exception:
+                    value = None
             config[key] = value
 
     # config map validations
@@ -58,6 +59,8 @@ def parse_map(filename: str) -> dict[str, Any]:
         if (((width//2-3) <= exit[0] <= (width//2+3))
                 and ((height//2-2) <= exit[1] <= (height//2+2))):
             raise ValueError("Exit cant be in the middle of the maze!")
+    else:
+        print("Maze too small for 42 logo")
     # no value can be negative or out of map
     if entry[0] < 0 or entry[1] < 0 or exit[0] < 0 or exit[1] < 0:
         raise ValueError("Coordenates can't be negative")

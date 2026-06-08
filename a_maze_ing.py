@@ -18,7 +18,8 @@ def amazeing() -> None:
             config['ENTRY'],
             config['EXIT'],
             config['PERFECT'],
-            config['OUTPUT_FILE']
+            config['OUTPUT_FILE'],
+            config['SEED']
         )
         maze.generate_maze()
 

@@ -34,7 +34,8 @@ class MazeGenerator:
             entry: Tuple[int, int],
             exit: Tuple[int, int],
             perfect: bool,
-            output: str
+            output: str,
+            seed: Any
             ) -> None:
         self.width = width
         self.height = height
@@ -43,11 +44,17 @@ class MazeGenerator:
         self.perfect = perfect
         self.output = output
         self.grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
-        self.seed: Optional[int] = None
+        if seed:
+            self.seed = seed
+            self.is_seed_custom = True
+        else:
+            self.seed = None
+            self.is_seed_custom = False
 
     def generate_maze(self) -> None:
         """Generate a maze using recursive carving algorithm."""
-        self.seed = random.randint(1, 999999999)
+        if not self.is_seed_custom:
+            self.seed = random.randint(1, 999999999)
         random.seed(self.seed)
 
         def get_neighbors(cell: Cell) -> list[Any]:
@@ -237,6 +244,7 @@ class MazeGenerator:
         changed = 0
         for y in random.sample(range(self.height), self.height):
             for x in random.sample(range(self.width), self.width):
+                # if 6-10% of the maze is changed stop
                 if changed > (self.height*self.width)//15:
                     return
                 cell = self.grid[y][x]
@@ -249,6 +257,7 @@ class MazeGenerator:
                 ]
 
                 for dx, dy, wall, opposite in directions:
+                    # if ~10% of the maze is changed stop
                     if changed > (self.height*self.width)//10:
                         return
                     nx = x + dx
@@ -256,6 +265,7 @@ class MazeGenerator:
 
                     if 0 <= nx < self.width and 0 <= ny < self.height:
                         neighbor = self.grid[ny][nx]
+                        # if cell is 42 logo dont change and continue
                         if self.height > 10 and self.width > 10:
                             if self.get_cell_type(x, y) == "wall":
                                 continue
@@ -292,13 +302,13 @@ class MazeGenerator:
         raw_path = self.solve(path_matrix)
 
         if raw_path:
-            directions = {(0, -2): "S", (2, 0): "W", (0, 2): "N", (-2, 0): "E"}
+            directions = {(0, -2): "N", (2, 0): "E", (0, 2): "S", (-2, 0): "W"}
             moves = ""
             for i in range(2, len(raw_path), 2):
                 px, py = raw_path[i - 2]
                 cx, cy = raw_path[i]
                 moves += directions[(cx - px, cy - py)]
-            lines.append(moves[::-1])
+            lines.append(moves)
         else:
             lines.append("")
 
